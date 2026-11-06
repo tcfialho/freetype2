@@ -508,8 +508,10 @@
     /* save this for hinting seac accents */
     CF2_Fixed  hintOriginY = curY;
 
-    CF2_Stack  opStack = NULL;
-    FT_UInt    stackSize;
+    CF2_StackRec     opStackRec;
+    CF2_StackNumber  stackBuffer[513];
+    CF2_Stack        opStack = NULL;
+    FT_UInt          stackSize;
     FT_Byte    op1;                       /* first opcode byte */
 
     CF2_F16Dot16  storage[CF2_STORAGE_SIZE];    /* for `put' and `get' */
@@ -604,12 +606,23 @@
     /* allocate an operand stack */
     stackSize = font->isCFF2 ? cf2_getMaxstack( decoder )
                              : CF2_OPERAND_STACK_SIZE;
-    opStack   = cf2_stack_init( memory, error, stackSize );
-
-    if ( !opStack )
+    if ( stackSize <= 513 )
     {
-      lastError = FT_THROW( Out_Of_Memory );
-      goto exit;
+      opStackRec.memory    = memory;
+      opStackRec.error     = error;
+      opStackRec.buffer    = stackBuffer;
+      opStackRec.top       = stackBuffer;
+      opStackRec.stackSize = stackSize;
+      opStack              = &opStackRec;
+    }
+    else
+    {
+      opStack = cf2_stack_init( memory, error, stackSize );
+      if ( !opStack )
+      {
+        lastError = FT_THROW( Out_Of_Memory );
+        goto exit;
+      }
     }
 
     /* initialize subroutine stack by placing top level charstring as */
@@ -3039,7 +3052,8 @@
     cf2_arrstack_finalize( &vStemHintArray );
     cf2_arrstack_finalize( &hStemHintArray );
     cf2_arrstack_finalize( &subrStack );
-    cf2_stack_free( opStack );
+    if ( opStack && opStack != &opStackRec )
+      cf2_stack_free( opStack );
 
     FT_TRACE4(( "\n" ));
 
