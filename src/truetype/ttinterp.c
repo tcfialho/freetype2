@@ -2482,7 +2482,7 @@
    * Opcode range: 0x50
    * Stack:        int32? int32? --> bool
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_LT( FT_Long*  args )
   {
     args[0] = ( args[0] < args[1] );
@@ -2495,7 +2495,7 @@
    * Opcode range: 0x51
    * Stack:        int32? int32? --> bool
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_LTEQ( FT_Long*  args )
   {
     args[0] = ( args[0] <= args[1] );
@@ -2508,7 +2508,7 @@
    * Opcode range: 0x52
    * Stack:        int32? int32? --> bool
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_GT( FT_Long*  args )
   {
     args[0] = ( args[0] > args[1] );
@@ -2521,7 +2521,7 @@
    * Opcode range: 0x53
    * Stack:        int32? int32? --> bool
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_GTEQ( FT_Long*  args )
   {
     args[0] = ( args[0] >= args[1] );
@@ -2534,7 +2534,7 @@
    * Opcode range: 0x54
    * Stack:        StkElt StkElt --> bool
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_EQ( FT_Long*  args )
   {
     args[0] = ( args[0] == args[1] );
@@ -2547,7 +2547,7 @@
    * Opcode range: 0x55
    * Stack:        StkElt StkElt --> bool
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_NEQ( FT_Long*  args )
   {
     args[0] = ( args[0] != args[1] );
@@ -2588,7 +2588,7 @@
    * Opcode range: 0x5A
    * Stack:        uint32 uint32 --> uint32
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_AND( FT_Long*  args )
   {
     args[0] = ( args[0] && args[1] );
@@ -2601,7 +2601,7 @@
    * Opcode range: 0x5B
    * Stack:        uint32 uint32 --> uint32
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_OR( FT_Long*  args )
   {
     args[0] = ( args[0] || args[1] );
@@ -2614,7 +2614,7 @@
    * Opcode range: 0x5C
    * Stack:        StkElt --> uint32
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_NOT( FT_Long*  args )
   {
     args[0] = !args[0];
@@ -2627,7 +2627,7 @@
    * Opcode range: 0x60
    * Stack:        f26.6 f26.6 --> f26.6
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_ADD( FT_Long*  args )
   {
     args[0] = ADD_LONG( args[0], args[1] );
@@ -2640,7 +2640,7 @@
    * Opcode range: 0x61
    * Stack:        f26.6 f26.6 --> f26.6
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_SUB( FT_Long*  args )
   {
     args[0] = SUB_LONG( args[0], args[1] );
@@ -2683,7 +2683,7 @@
    * Opcode range: 0x64
    * Stack:        f26.6 --> f26.6
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_ABS( FT_Long*  args )
   {
     if ( args[0] < 0 )
@@ -2697,7 +2697,7 @@
    * Opcode range: 0x65
    * Stack:        f26.6 --> f26.6
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_NEG( FT_Long*  args )
   {
     args[0] = NEG_LONG( args[0] );
@@ -2710,7 +2710,7 @@
    * Opcode range: 0x66
    * Stack:        f26.6 --> f26.6
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_FLOOR( FT_Long*  args )
   {
     args[0] = FT_PIX_FLOOR( args[0] );
@@ -2723,7 +2723,7 @@
    * Opcode range: 0x67
    * Stack:        f26.6 --> f26.6
    */
-  static void
+  static inline __attribute__((always_inline)) void
   Ins_CEILING( FT_Long*  args )
   {
     args[0] = FT_PIX_CEIL_LONG( args[0] );
