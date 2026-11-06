@@ -995,10 +995,17 @@
 
 
         /* only the new Adobe engine (for both CFF and Type 1) is `light'; */
-        /* we use `strstr' to catch both `Type 1' and `CID Type 1'         */
-        is_light_type1 =
-          ft_strstr( FT_Get_Font_Format( face ), "Type 1" ) != NULL &&
-          ((PS_Driver)driver)->hinting_engine == FT_HINTING_ADOBE;
+        /* evaluate lazily only if mode is light and driver does not hint lightly */
+        is_light_type1 = FALSE;
+        if ( mode == FT_RENDER_MODE_LIGHT && !FT_DRIVER_HINTS_LIGHTLY( driver ) )
+        {
+          const char*  format = FT_Get_Font_Format( face );
+
+
+          is_light_type1 = format &&
+                           ft_strstr( format, "Type 1" ) != NULL &&
+                           ((PS_Driver)driver)->hinting_engine == FT_HINTING_ADOBE;
+        }
 
         /* the check for `num_locations' assures that we actually    */
         /* test for instructions in a TTF and not in a CFF-based OTF */
