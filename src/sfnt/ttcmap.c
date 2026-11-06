@@ -2416,25 +2416,27 @@
                              FT_UInt32*  pchar_code,
                              FT_Bool     next )
   {
-    FT_UInt    gindex     = 0;
-    FT_Byte*   p          = cmap->data + 12;
-    FT_UInt32  num_groups = TT_PEEK_ULONG( p );
-    FT_UInt32  char_code  = *pchar_code + next;
-    FT_UInt32  start, end, start_id;
-    FT_UInt32  max, min, mid;
+    FT_UInt          gindex     = 0;
+    FT_Byte*         p          = cmap->data + 12;
+    const FT_Byte*   groups;
+    FT_UInt32        num_groups = TT_PEEK_ULONG( p );
+    FT_UInt32        char_code  = *pchar_code + next;
+    FT_UInt32        start, end, start_id;
+    FT_UInt32        max, min, mid;
 
 
     if ( !num_groups )
       return 0;
 
-    min = 0;
-    max = num_groups;
+    groups = cmap->data + 16;
+    min    = 0;
+    max    = num_groups;
 
     /* binary search */
     do
     {
       mid = ( min + max ) >> 1;
-      p   = cmap->data + 16 + 12 * mid;
+      p   = (FT_Byte*)( groups + 12 * mid );
 
       start = TT_NEXT_ULONG( p );
       end   = TT_NEXT_ULONG( p );
@@ -2448,7 +2450,11 @@
         start_id = TT_PEEK_ULONG( p );
 
         /* reject invalid glyph index */
+#if defined(__GNUC__) || defined(__clang__)
+        if ( __builtin_expect( start_id > 0xFFFFFFFFUL - ( char_code - start ), 0 ) )
+#else
         if ( start_id > 0xFFFFFFFFUL - ( char_code - start ) )
+#endif
           gindex = 0;
         else
           gindex = (FT_UInt)( start_id + ( char_code - start ) );
