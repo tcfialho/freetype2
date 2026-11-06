@@ -100,7 +100,42 @@ FT_BEGIN_HEADER
   }
 
 
+#ifndef FT_MOVE_SIGN
+#define FT_MOVE_SIGN( utype, x, x_unsigned, s ) \
+  FT_BEGIN_STMNT                                \
+    if ( (x) < 0 )                              \
+    {                                           \
+      x_unsigned = 0U - (utype)(x);             \
+      s          = -s;                          \
+    }                                           \
+    else                                        \
+      x_unsigned = (utype)(x);                  \
+  FT_END_STMNT
+#endif
+
+  static inline FT_Long
+  FT_DivFix_64( FT_Long  a_,
+                FT_Long  b_ )
+  {
+    FT_Int     s = 1;
+    FT_UInt64  a, b, q;
+    FT_Long    q_;
+
+
+    FT_MOVE_SIGN( FT_UInt64, a_, a, s );
+    FT_MOVE_SIGN( FT_UInt64, b_, b, s );
+
+    q = b > 0 ? ( ( a << 16 ) + ( b >> 1 ) ) / b
+              : 0x7FFFFFFFUL;
+
+    q_ = (FT_Long)q;
+
+    return s < 0 ? NEG_LONG( q_ ) : q_;
+  }
+
+
 #define FT_MulFix( a, b )  FT_MulFix_64( a, b )
+#define FT_DivFix( a, b )  FT_DivFix_64( a, b )
 
 #elif !defined( FT_CONFIG_OPTION_NO_ASSEMBLER )
   /* Provide 32-bit assembler fragments for optimized FT_MulFix. */

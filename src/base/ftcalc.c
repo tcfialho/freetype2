@@ -42,6 +42,9 @@
 #ifdef FT_MulFix
 #  undef FT_MulFix
 #endif
+#ifdef FT_DivFix
+#  undef FT_DivFix
+#endif
 
 
   /**************************************************************************
@@ -56,6 +59,7 @@
 
   /* transfer sign, leaving a positive number;                        */
   /* we need an unsigned value to safely negate INT_MIN (or LONG_MIN) */
+#ifndef FT_MOVE_SIGN
 #define FT_MOVE_SIGN( utype, x, x_unsigned, s ) \
   FT_BEGIN_STMNT                                \
     if ( x < 0 )                                \
@@ -66,6 +70,7 @@
     else                                        \
       x_unsigned = (utype)x;                    \
   FT_END_STMNT
+#endif
 
   /* The following three functions are available regardless of whether */
   /* FT_INT64 is defined.                                              */
