@@ -7324,15 +7324,33 @@
           break;
 #endif
 
+        case 0xB0:
+        case 0xB1:
+        case 0xB2:
+        case 0xB3:
+        case 0xB4:
+        case 0xB5:
+        case 0xB6:
+        case 0xB7:
+          Ins_PUSHB( exc, args );
+          break;
+
+        case 0xB8:
+        case 0xB9:
+        case 0xBA:
+        case 0xBB:
+        case 0xBC:
+        case 0xBD:
+        case 0xBE:
+        case 0xBF:
+          Ins_PUSHW( exc, args );
+          break;
+
         default:
           if ( opcode >= 0xE0 )
             Ins_MIRP( exc, args );
           else if ( opcode >= 0xC0 )
             Ins_MDRP( exc, args );
-          else if ( opcode >= 0xB8 )
-            Ins_PUSHW( exc, args );
-          else if ( opcode >= 0xB0 )
-            Ins_PUSHB( exc, args );
           else
             Ins_UNKNOWN( exc );
         }
