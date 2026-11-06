@@ -426,7 +426,7 @@ FT_BEGIN_HEADER
    * The size in bytes of the render pool used by the scan-line converter to
    * do all of its work.
    */
-#define FT_RENDER_POOL_SIZE  16384L
+#define FT_RENDER_POOL_SIZE  65536L
 
 
   /**************************************************************************
