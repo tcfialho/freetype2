@@ -290,14 +290,24 @@
 
 
     for ( ; count--; spans++ )
+    {
+      unsigned int   cov  = spans->coverage;
+      unsigned char  val0 = (unsigned char)( ( cov * target->wght[0] + 85 ) >> 8 );
+      unsigned char  val1 = (unsigned char)( ( cov * target->wght[1] + 85 ) >> 8 );
+      unsigned char  val2 = (unsigned char)( ( cov * target->wght[2] + 85 ) >> 8 );
+      unsigned char  val3 = (unsigned char)( ( cov * target->wght[3] + 85 ) >> 8 );
+      unsigned char  val4 = (unsigned char)( ( cov * target->wght[4] + 85 ) >> 8 );
+
+
       for ( dst = dst_line + spans->x, w = spans->len; w--; dst++ )
       {
-        dst[0] += ( spans->coverage * target->wght[0] + 85 ) >> 8;
-        dst[1] += ( spans->coverage * target->wght[1] + 85 ) >> 8;
-        dst[2] += ( spans->coverage * target->wght[2] + 85 ) >> 8;
-        dst[3] += ( spans->coverage * target->wght[3] + 85 ) >> 8;
-        dst[4] += ( spans->coverage * target->wght[4] + 85 ) >> 8;
+        dst[0] += val0;
+        dst[1] += val1;
+        dst[2] += val2;
+        dst[3] += val3;
+        dst[4] += val4;
       }
+    }
   }
 
 
@@ -385,14 +395,24 @@
 
 
     for ( ; count--; spans++ )
+    {
+      unsigned int   cov  = spans->coverage;
+      unsigned char  val0 = (unsigned char)( ( cov * target->wght[0] + 85 ) >> 8 );
+      unsigned char  val1 = (unsigned char)( ( cov * target->wght[1] + 85 ) >> 8 );
+      unsigned char  val2 = (unsigned char)( ( cov * target->wght[2] + 85 ) >> 8 );
+      unsigned char  val3 = (unsigned char)( ( cov * target->wght[3] + 85 ) >> 8 );
+      unsigned char  val4 = (unsigned char)( ( cov * target->wght[4] + 85 ) >> 8 );
+
+
       for ( dst = dst_line + spans->x, w = spans->len; w--; dst++ )
       {
-        dst[        0] += ( spans->coverage * target->wght[0] + 85 ) >> 8;
-        dst[    pitch] += ( spans->coverage * target->wght[1] + 85 ) >> 8;
-        dst[2 * pitch] += ( spans->coverage * target->wght[2] + 85 ) >> 8;
-        dst[3 * pitch] += ( spans->coverage * target->wght[3] + 85 ) >> 8;
-        dst[4 * pitch] += ( spans->coverage * target->wght[4] + 85 ) >> 8;
+        dst[        0] += val0;
+        dst[    pitch] += val1;
+        dst[2 * pitch] += val2;
+        dst[3 * pitch] += val3;
+        dst[4 * pitch] += val4;
       }
+    }
   }
 
   static FT_Error
