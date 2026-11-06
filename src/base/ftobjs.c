@@ -575,7 +575,7 @@
   }
 
 
-  static void
+  static inline __attribute__((always_inline)) void
   ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
     /* free bitmap if needed */
