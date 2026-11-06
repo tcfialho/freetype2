@@ -927,6 +927,9 @@ typedef ptrdiff_t  FT_PtrDist;
     else                                  /* any other line */
     {
       FT_Int64  prod = dx * (FT_Int64)fy1 - dy * (FT_Int64)fx1;
+      FT_Int64  dx_one = (FT_Int64)dx * ONE_PIXEL;
+      FT_Int64  dy_one = (FT_Int64)dy * ONE_PIXEL;
+      FT_Int64  dxy_one = dx_one - dy_one;
       FT_UDIVPREP( ex1 != ex2, dx );
       FT_UDIVPREP( ey1 != ey2, dy );
 
@@ -936,21 +939,21 @@ typedef ptrdiff_t  FT_PtrDist;
       /* also easily updated when moving from one cell to the next.  */
       do
       {
-        if      ( prod - dx * ONE_PIXEL                  >  0 &&
-                  prod                                   <= 0 ) /* left */
+        if      ( prod - dx_one >  0 &&
+                  prod          <= 0 ) /* left */
         {
           fx2 = 0;
           fy2 = FT_UDIV( -prod, -dx );
-          prod -= dy * ONE_PIXEL;
+          prod -= dy_one;
           FT_INTEGRATE( ras, fy2 - fy1, fx1 + fx2 );
           fx1 = ONE_PIXEL;
           fy1 = fy2;
           ex1--;
         }
-        else if ( prod - dx * ONE_PIXEL + dy * ONE_PIXEL >  0 &&
-                  prod - dx * ONE_PIXEL                  <= 0 ) /* up */
+        else if ( prod - dxy_one >  0 &&
+                  prod - dx_one  <= 0 ) /* up */
         {
-          prod -= dx * ONE_PIXEL;
+          prod -= dx_one;
           fx2 = FT_UDIV( -prod, dy );
           fy2 = ONE_PIXEL;
           FT_INTEGRATE( ras, fy2 - fy1, fx1 + fx2 );
@@ -958,10 +961,10 @@ typedef ptrdiff_t  FT_PtrDist;
           fy1 = 0;
           ey1++;
         }
-        else if ( prod                  + dy * ONE_PIXEL >= 0 &&
-                  prod - dx * ONE_PIXEL + dy * ONE_PIXEL <= 0 ) /* right */
+        else if ( prod + dy_one  >= 0 &&
+                  prod - dxy_one <= 0 ) /* right */
         {
-          prod += dy * ONE_PIXEL;
+          prod += dy_one;
           fx2 = ONE_PIXEL;
           fy2 = FT_UDIV( prod, dx );
           FT_INTEGRATE( ras, fy2 - fy1, fx1 + fx2 );
@@ -974,7 +977,7 @@ typedef ptrdiff_t  FT_PtrDist;
         {
           fx2 = FT_UDIV( prod, -dy );
           fy2 = 0;
-          prod += dx * ONE_PIXEL;
+          prod += dx_one;
           FT_INTEGRATE( ras, fy2 - fy1, fx1 + fx2 );
           fx1 = fx2;
           fy1 = ONE_PIXEL;
