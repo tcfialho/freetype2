@@ -1245,6 +1245,12 @@
     FT_Byte*  p;
 
 
+    FT_Byte*  ends;
+    FT_Byte*  starts;
+    FT_Byte*  deltas;
+    FT_Byte*  offsets;
+
+
     p = cmap->data + 6;
     num_segs = TT_PEEK_USHORT( p ) >> 1;
 
@@ -1253,17 +1259,24 @@
 
     num_segs2 = num_segs << 1;
 
+    ends    = cmap->data + 14;
+    starts  = ends + 2 + num_segs2;
+    deltas  = starts + num_segs2;
+    offsets = deltas + num_segs2;
+
     min = 0;
     max = num_segs;
 
     /* binary search */
     do
     {
+      FT_UInt  mid2;
+
+
       mid    = ( min + max ) >> 1;
-      p      = cmap->data + 14 + mid * 2;
-      end    = TT_PEEK_USHORT( p );
-      p     += 2 + num_segs2;
-      start  = TT_PEEK_USHORT( p );
+      mid2   = mid << 1;
+      end    = TT_PEEK_USHORT( ends + mid2 );
+      start  = TT_PEEK_USHORT( starts + mid2 );
 
       if ( charcode < start )
         max = mid;
@@ -1271,9 +1284,8 @@
         min = mid + 1;
       else
       {
-        p     += num_segs2;
-        delta  = TT_PEEK_SHORT( p );
-        p     += num_segs2;
+        p      = offsets + mid2;
+        delta  = TT_PEEK_SHORT( deltas + mid2 );
         offset = TT_PEEK_USHORT( p );
 
         /* some fonts have an incorrect last segment; */
