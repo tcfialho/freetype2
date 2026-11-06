@@ -45,6 +45,9 @@
 #ifdef FT_DivFix
 #  undef FT_DivFix
 #endif
+#ifdef FT_MulDiv
+#  undef FT_MulDiv
+#endif
 
 
   /**************************************************************************

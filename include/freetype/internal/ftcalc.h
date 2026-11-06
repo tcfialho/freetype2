@@ -134,8 +134,32 @@ FT_BEGIN_HEADER
   }
 
 
-#define FT_MulFix( a, b )  FT_MulFix_64( a, b )
-#define FT_DivFix( a, b )  FT_DivFix_64( a, b )
+  static inline FT_Long
+  FT_MulDiv_64( FT_Long  a_,
+                FT_Long  b_,
+                FT_Long  c_ )
+  {
+    FT_Int     s = 1;
+    FT_UInt64  a, b, c, d;
+    FT_Long    d_;
+
+
+    FT_MOVE_SIGN( FT_UInt64, a_, a, s );
+    FT_MOVE_SIGN( FT_UInt64, b_, b, s );
+    FT_MOVE_SIGN( FT_UInt64, c_, c, s );
+
+    d = c > 0 ? ( a * b + ( c >> 1 ) ) / c
+              : 0x7FFFFFFFUL;
+
+    d_ = (FT_Long)d;
+
+    return s < 0 ? NEG_LONG( d_ ) : d_;
+  }
+
+
+#define FT_MulFix( a, b )     FT_MulFix_64( a, b )
+#define FT_DivFix( a, b )     FT_DivFix_64( a, b )
+#define FT_MulDiv( a, b, c )  FT_MulDiv_64( a, b, c )
 
 #elif !defined( FT_CONFIG_OPTION_NO_ASSEMBLER )
   /* Provide 32-bit assembler fragments for optimized FT_MulFix. */
